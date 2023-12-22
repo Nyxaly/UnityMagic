@@ -6,6 +6,8 @@ public class Polygon
 {
     public List<Vector2> vertices;
 
+
+
     
     public Polygon(List<Vector2> verts)
     {
@@ -18,6 +20,7 @@ public class Polygon
         for (int i = 0; i < vertices.Count - 1; i++)
             sides.Add(new Side(vertices[i], vertices[i + 1]));
         sides.Add(new Side(vertices[vertices.Count - 1], vertices[0]));
+        Debug.Log(vertices.Count);
         return sides;
 
     }
@@ -65,6 +68,8 @@ public class Polygon
         {
             colors.Add(Color.Lerp(c1, c2, (float)i / (float)vertices.Count));
             colors.Add(Color.Lerp(c1, c2, (float)i / (float)vertices.Count));
+            colors.Add(Color.Lerp(c1, c2, (float)i / (float)vertices.Count));
+            colors.Add(Color.Lerp(c1, c2, (float)i / (float)vertices.Count));
             int j = i != 0 ? i - 1 : vertices.Count - 1;
             int k = i != vertices.Count - 1 ? i + 1 : 0;
             Vector2 a = vertices[i] - vertices[j];
@@ -76,6 +81,13 @@ public class Polygon
             mverts.Add(vertices[i] + relPosition + offset1);
             mverts.Add(vertices[i] + relPosition - offset2);
             mverts.Add(vertices[i] + relPosition + offset2);
+            triangles.Add(t);
+            triangles.Add(t+2);
+            triangles.Add(t+1);
+            triangles.Add(t+1);
+            triangles.Add(t+2);
+            triangles.Add(t+3);
+
             triangles.Add(t+2);
             triangles.Add((t + 4) % (4 * vertices.Count));
             triangles.Add(t + 3);
@@ -116,7 +128,21 @@ public class Polygon
 
         return dir * dst;
     }
-    public static Vector2? IntersectsSide(Vector2 rayOrigin, Vector2 rayDirection, Side side)
+    public static Intersection IntersectsPolygon(Vector2 rayOrigin, Vector2 rayDirection, Polygon p)
+    {
+        foreach (Side s in p.sides())
+        {
+            Intersection i = IntersectsSide(rayOrigin, rayDirection, s);
+            if (i != null)
+            {
+                Debug.Log(s.p1);
+                Debug.Log(s.p2);
+                return i;
+            }
+        }
+        return null;
+    }
+    public static Intersection IntersectsSide(Vector2 rayOrigin, Vector2 rayDirection, Side side)
     {
         //clean lmfao
         float a;
@@ -141,8 +167,10 @@ public class Polygon
             s = (a * (rayOrigin.x - side.p1.x) + side.p1.y - rayOrigin.y) / (a * side.sideDir.x - side.sideDir.y);
             r = (side.p1.y + s * side.sideDir.y - rayOrigin.y) / rayDirection.y;
         }
-        if (Mathf.Abs(s) <= 1)
-            return rayOrigin + rayDirection * r;
+        if (s <= 1 && s >= 0 && r > 0)
+        {
+            return new Intersection(rayOrigin + rayDirection * r, r);
+        }
         return null;
     }
 
@@ -194,5 +222,40 @@ public class Side
         this.p1 = p1;
         this.p2 = p2;
         sideDir = p2 - p1;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is Side side &&
+               p1.Equals(side.p1) &&
+               p2.Equals(side.p2) &&
+               sideDir.Equals(side.sideDir);
+    }
+
+    public override int GetHashCode()
+    {
+        int hashCode = 1840839150;
+        hashCode = hashCode * -1521134295 + p1.GetHashCode();
+        hashCode = hashCode * -1521134295 + p2.GetHashCode();
+        hashCode = hashCode * -1521134295 + sideDir.GetHashCode();
+        return hashCode;
+    }
+}
+
+
+public class Intersection
+{
+    public Vector2 p;
+    public float dst;
+
+    public Intersection(Vector2 p, float dst)
+    {
+        this.p = p;
+        this.dst = dst;
+    }
+
+    public override string ToString()
+    {
+        return p.ToString() + " with dst: " + dst;
     }
 }

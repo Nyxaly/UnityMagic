@@ -23,6 +23,7 @@ public class CameraManager : MonoBehaviour
 
     void Update()
     {
+
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(2))
         {
@@ -79,10 +80,12 @@ public class CameraManager : MonoBehaviour
         currentPolygonVerts.Clear();
         creatingPolygonMesh.GetComponent<MeshFilter>().mesh = null;
         creatingPolygon = false;
+        Debug.Log(m.polygons[0].vertices.Count);
     }
 
     private void CreatePolygonAction()
     {
+        
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
@@ -93,7 +96,7 @@ public class CameraManager : MonoBehaviour
                 {
                     if (currentPolygonObjs[0] == hit.collider.gameObject)
                     {
-                        Polygon p = new Polygon(currentPolygonVerts);
+                        Polygon p = new Polygon(new List<Vector2>(currentPolygonVerts));
                         m.InstantiatePolygon(p, .05f, Color.blue, Color.red, Vector2.zero);
                         StopPolygonAction();
                     }
@@ -113,7 +116,7 @@ public class CameraManager : MonoBehaviour
         {
             currentPolygonVerts.Add(mousePos);
             Polygon p = new Polygon(currentPolygonVerts);
-            creatingPolygonMesh.GetComponent<MeshFilter>().mesh = p.getMesh(.05f, Color.white, Color.white, Vector2.zero);
+            creatingPolygonMesh.GetComponent<MeshFilter>().mesh = p.getMesh2(.05f, Color.blue, Color.red,Vector2.zero);
             currentPolygonVerts.Remove(mousePos);
         }
     }
