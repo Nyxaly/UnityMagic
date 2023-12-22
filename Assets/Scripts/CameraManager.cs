@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,27 +18,32 @@ public class CameraManager : MonoBehaviour
     private List<GameObject> currentPolygonObjs;
     private List<Vector2> currentPolygonVerts;
     public GameObject creatingPolygonMesh;
+    public CoordinateSystem CSystem;
 
     private Vector2 mousePos;
-
-
+    float orthographicSize = 0;
+    
     void Update()
     {
-
+        
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetMouseButtonDown(2))
+        if (Input.GetMouseButtonDown(0))
         {
             dragOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             return;
         }
 
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(0))
         {
-
+            CSystem.UpdateCoordinateSystem();
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position += dragOrigin - pos;
         }
-        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1, 20);
+        
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1, 25);
+        if (orthographicSize!= cam.orthographicSize) CSystem.UpdateCoordinateSystem();
+        orthographicSize = cam.orthographicSize;
+        
 
         if (Input.GetKeyDown(KeyCode.C))
         {
