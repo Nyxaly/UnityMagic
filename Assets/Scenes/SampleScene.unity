@@ -298,6 +298,7 @@ MonoBehaviour:
   vertexPrefab: {fileID: 6007596570579238397, guid: dbc923d3473278e4f8e08e56c14faadc, type: 3}
   tempObjParent: {fileID: 1916370955}
   creatingPolygonMesh: {fileID: 754324824}
+  CSystem: {fileID: 741567975}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -356,8 +357,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &567370442
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,6 +524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 519420031}
+  factor: 0
 --- !u!4 &741567976
 Transform:
   m_ObjectHideFlags: 0
@@ -533,14 +533,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741567972}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.2422733, y: -0.23088641, z: -8.967991}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> Stashed changes
 --- !u!1 &754324824
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,8 +685,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &2054347417
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,4 +784,3 @@ MonoBehaviour:
   manager: {fileID: 158949005}
   laserWidth: 0.05
   laserColor: {r: 1, g: 0, b: 0, a: 0}
->>>>>>> Stashed changes
