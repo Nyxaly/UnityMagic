@@ -9,10 +9,10 @@ public class Manager : MonoBehaviour
     public Transform polygonParent;
     void Start()
     {
-        Polygon p1 = Polygon.Regular(15, Vector2.zero, 5, 0);
-        InstantiatePolygon(p1, .05f, Color.white, Color.red, Vector2.zero);
-        InstantiatePolygon(p1.mirror(p1.sides()[0]), .05f, Color.white, Color.red, Vector2.zero);
-        InstantiatePolygon(p1.mirror(p1.sides()[0]).mirror(p1.sides()[7]), .05f, Color.white, Color.red, Vector2.zero);
+        //Polygon p1 = Polygon.Regular(15, Vector2.zero, 5, 0);
+        //InstantiatePolygon(p1, .05f, Color.white, Color.red, Vector2.zero);
+        //InstantiatePolygon(p1.mirror(p1.sides()[0]), .05f, Color.white, Color.red, Vector2.zero);
+        //InstantiatePolygon(p1.mirror(p1.sides()[0]).mirror(p1.sides()[7]), .05f, Color.white, Color.red, Vector2.zero);
 
     } 
     // Update is called once per frame

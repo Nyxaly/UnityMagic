@@ -24,19 +24,19 @@ public class CameraManager : MonoBehaviour
     void Update()
     {
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Input.GetMouseButtonDown(2))
+        if (Input.GetMouseButtonDown(0))
         {
             dragOrigin = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             return;
         }
 
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(0))
         {
 
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position += dragOrigin - pos;
         }
-        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1, 20);
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1, 25);
 
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -83,7 +83,7 @@ public class CameraManager : MonoBehaviour
 
     private void CreatePolygonAction()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
             if (hit.collider != null)
