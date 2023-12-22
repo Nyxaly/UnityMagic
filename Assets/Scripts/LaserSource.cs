@@ -11,7 +11,7 @@ public class LaserSource : MonoBehaviour
     public float laserWidth = 0.01f;
     public Color laserColor;
 
-
+    public bool mirroringRay;
     public void Start()
     {
 
@@ -50,6 +50,11 @@ public class LaserSource : MonoBehaviour
 
     public void drawLaser()
     {
+        if (mirroringRay)
+        {
+            drawMirrorRayLaser();
+            return;
+        }
 
         if (path == null || path.Count < 2)
             return; 
@@ -97,6 +102,33 @@ public class LaserSource : MonoBehaviour
         GetComponent<MeshFilter>().mesh = m;
     }
 
+    public void drawMirrorRayLaser()
+    {
+        List<Vector3> vertices = new List<Vector3>();
+        List<Color> colors = new List<Color>();
+        Vector2 v1 = path[0].pos - rotate90((path[1].pos - path[0].pos).normalized) * laserWidth * 0.5f;
+        Vector2 v2 = path[0].pos + rotate90((path[1].pos - path[0].pos).normalized) * laserWidth * 0.5f;
+        Vector2 v3 = v1 + 100f * (path[1].pos - path[0].pos);
+        Vector2 v4 = v2 + 100f * (path[1].pos - path[0].pos);
+        vertices.Add(v1);
+        vertices.Add(v2);
+        vertices.Add(v3);
+        vertices.Add(v4);
+
+        
+        colors.Add(laserColor);
+        colors.Add(laserColor);
+        colors.Add(laserColor);
+        colors.Add(laserColor);
+
+        Mesh m = new Mesh();
+        m.SetVertices(vertices);
+        m.triangles = new int[6] { 0, 2, 1, 1, 2, 3 };
+        
+        GetComponent<MeshFilter>().mesh = m;
+
+    }
+
     private Vector2 rotate90(Vector2 v)
     {
         return new Vector2(-v.y, v.x);
@@ -136,8 +168,15 @@ public class LaserSource : MonoBehaviour
         }
         if (closestIntersection != null)
         {
-            Vector2 reflection = Polygon.MirrorPoint(closestIntersection.p + previous.outDir, r.side.p1, r.side.sideDir) - closestIntersection.p;
-            r.outDir = reflection;
+            if (!mirroringRay)
+            {
+                Vector2 reflection = Polygon.MirrorPoint(closestIntersection.p + previous.outDir, r.side.p1, r.side.sideDir) - closestIntersection.p;
+                r.outDir = reflection;
+            } else
+            {
+                r.outDir = previous.outDir;
+                manager.InstantiatePolygon(r.polygon.mirror(r.side), .05f, Color.blue, Color.red, Vector2.zero);
+            }
         } else
         {
             Debug.Log("no intersection???: " + previous.pos + ", " + previous.outDir);
