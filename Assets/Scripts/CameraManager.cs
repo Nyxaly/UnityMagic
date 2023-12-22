@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,12 +18,14 @@ public class CameraManager : MonoBehaviour
     private List<GameObject> currentPolygonObjs;
     private List<Vector2> currentPolygonVerts;
     public GameObject creatingPolygonMesh;
+    public CoordinateSystem CSystem;
 
     private Vector2 mousePos;
-
-
+    float orthographicSize = 0;
+    
     void Update()
     {
+        
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButtonDown(0))
         {
@@ -32,11 +35,15 @@ public class CameraManager : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-
+            CSystem.UpdateCoordinateSystem();
             Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position += dragOrigin - pos;
         }
+        
         cam.orthographicSize = Mathf.Clamp(cam.orthographicSize - Input.mouseScrollDelta.y, 1, 25);
+        if (orthographicSize!= cam.orthographicSize) CSystem.UpdateCoordinateSystem();
+        orthographicSize = cam.orthographicSize;
+        
 
         if (Input.GetKeyDown(KeyCode.C))
         {
@@ -79,11 +86,13 @@ public class CameraManager : MonoBehaviour
         currentPolygonVerts.Clear();
         creatingPolygonMesh.GetComponent<MeshFilter>().mesh = null;
         creatingPolygon = false;
+        Debug.Log(m.polygons[0].vertices.Count);
     }
 
     private void CreatePolygonAction()
     {
-        if (Input.GetMouseButtonDown(1))
+        
+        if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
             if (hit.collider != null)
@@ -93,7 +102,7 @@ public class CameraManager : MonoBehaviour
                 {
                     if (currentPolygonObjs[0] == hit.collider.gameObject)
                     {
-                        Polygon p = new Polygon(currentPolygonVerts);
+                        Polygon p = new Polygon(new List<Vector2>(currentPolygonVerts));
                         m.InstantiatePolygon(p, .05f, Color.blue, Color.red, Vector2.zero);
                         StopPolygonAction();
                     }
@@ -113,7 +122,7 @@ public class CameraManager : MonoBehaviour
         {
             currentPolygonVerts.Add(mousePos);
             Polygon p = new Polygon(currentPolygonVerts);
-            creatingPolygonMesh.GetComponent<MeshFilter>().mesh = p.getMesh(.05f, Color.white, Color.white, Vector2.zero);
+            creatingPolygonMesh.GetComponent<MeshFilter>().mesh = p.getMesh2(.05f, Color.blue, Color.red,Vector2.zero);
             currentPolygonVerts.Remove(mousePos);
         }
     }

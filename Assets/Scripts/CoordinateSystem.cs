@@ -5,7 +5,8 @@ using UnityEngine;
 public class CoordinateSystem : MonoBehaviour
 {
     public Camera cam;
-
+    [Range(0.01f, 100)]
+    public float factor;
     private Mesh _m;
 
 
@@ -13,11 +14,16 @@ public class CoordinateSystem : MonoBehaviour
     {
         _m = new Mesh();
         GetComponent<MeshFilter>().mesh = _m;
+        factor = 1;
+        UpdateCoordinateSystem();
     }
+    
+    
 
-    private void Update()
+    public void UpdateCoordinateSystem()
     {
-        float linewidth = (cam.ViewportToWorldPoint(new(1,0)) - cam.ViewportToWorldPoint(new(0,0))).x/2000;
+        _m.Clear();
+        float linewidth = (cam.ViewportToWorldPoint(new(1,0)) - cam.ViewportToWorldPoint(new(0,0))).x/(2000*factor);
 
         List<Vector3> mverts = new List<Vector3>();//{new(linewidth, -100), new(-linewidth, -100), new(linewidth, 100), new(linewidth, 100)};
         List<int> triangles = new List<int>();//{0,2, 1, 2, 3, 1};
